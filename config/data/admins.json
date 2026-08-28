@@ -1,0 +1,11 @@
+[
+    {
+        "username": "admin",
+        "password": "$2y$10$P5TC1srLWrsyT\/ZYkjzrceIrY.pI4.5RO3c6NxRlXRqo2n0NvRQ1y",
+        "full_name": "System Administrator",
+        "email": "admin@dms.local",
+        "phone": "0000000000",
+        "created_at": "2026-07-22 19:13:57",
+        "id": 1
+    }
+]
