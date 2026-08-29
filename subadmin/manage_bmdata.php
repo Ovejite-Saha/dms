@@ -6,11 +6,20 @@ $pdo = db();
 
 $search     = trim($_GET['search'] ?? '');
 $distFilter = $_GET['district_id'] ?? '';
+$upaFilter  = $_GET['upazila_id'] ?? '';
 $levelFilter= $_GET['level_type'] ?? '';
 $page       = max(1, (int)($_GET['page'] ?? 1));
 $perPage    = 16;
 
 $districts = $pdo->query("SELECT id, name FROM districts ORDER BY name")->fetchAll();
+
+if ($distFilter !== '') {
+    $stmt = $pdo->prepare("SELECT id, name FROM upazilas WHERE district_id = ? ORDER BY name");
+    $stmt->execute([$distFilter]);
+    $filterUpazilas = $stmt->fetchAll();
+} else {
+    $filterUpazilas = [];
+}
 
 $sql = "
   SELECT b.*, 
@@ -33,6 +42,10 @@ if ($distFilter !== '') {
     $sql .= " AND b.district_id = ?";
     $params[] = $distFilter;
 }
+if ($upaFilter !== '') {
+    $sql .= " AND b.upazila_id = ?";
+    $params[] = $upaFilter;
+}
 if ($levelFilter !== '') {
     $sql .= " AND b.level_type = ?";
     $params[] = $levelFilter;
@@ -51,6 +64,8 @@ $items = array_slice($all, $offset, $perPage);
 
 $flash = $_SESSION['dms_flash'] ?? null;
 unset($_SESSION['dms_flash']);
+
+$ajaxBase = base_url() . '/actions/ajax_hierarchy.php';
 ?>
 <div class="container">
   <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -68,14 +83,23 @@ unset($_SESSION['dms_flash']);
   <?php endif; ?>
 
   <!-- Filters -->
-<form method="get" class="mb-4">
+<form method="get" class="mb-4" id="filterForm">
   <div class="search-bar d-flex flex-nowrap align-items-center gap-2" style="overflow-x:auto;">
     
-    <select name="district_id" class="form-select form-select-sm" style="min-width:100px;">
+    <select name="district_id" id="filter_district" class="form-select form-select-sm" style="min-width:100px;">
       <option value="">All Districts</option>
       <?php foreach ($districts as $d): ?>
         <option value="<?= $d['id'] ?>" <?= (string)$distFilter === (string)$d['id'] ? 'selected' : '' ?>>
           <?= htmlspecialchars($d['name']) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+
+    <select name="upazila_id" id="filter_upazila" class="form-select form-select-sm" style="min-width:100px;">
+      <option value="">All Upazilas</option>
+      <?php foreach ($filterUpazilas as $u): ?>
+        <option value="<?= $u['id'] ?>" <?= (string)$upaFilter === (string)$u['id'] ? 'selected' : '' ?>>
+          <?= htmlspecialchars($u['name']) ?>
         </option>
       <?php endforeach; ?>
     </select>
@@ -100,6 +124,28 @@ unset($_SESSION['dms_flash']);
     <a href="?" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Reset</a>
   </div>
 </form>
+
+<script>
+(function(){
+  var ajaxBase = '<?= $ajaxBase ?>';
+  var dist = document.getElementById('filter_district');
+  var upa  = document.getElementById('filter_upazila');
+  dist.addEventListener('change', function(){
+    upa.innerHTML = '<option value="">All Upazilas</option>';
+    if (!this.value) return;
+    fetch(ajaxBase + '?action=upazilas&district_id=' + this.value)
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        data.forEach(function(i){
+          var o = document.createElement('option');
+          o.value = i.id;
+          o.textContent = i.name;
+          upa.appendChild(o);
+        });
+      });
+  });
+})();
+</script>
 
   <?php if (empty($items)): ?>
     <div class="empty-state"><i class="fa-solid fa-folder-open"></i><h4>No Benchmark data found</h4></div>
@@ -181,7 +227,7 @@ unset($_SESSION['dms_flash']);
     <ul class="pagination justify-content-center">
       <?php for ($i = 1; $i <= $totalPages; $i++): ?>
         <li class="page-item <?= $i === $page ? 'active' : '' ?>">
-          <a class="page-link" href="?page=<?= $i ?>&district_id=<?= urlencode($distFilter) ?>&level_type=<?= urlencode($levelFilter) ?>&search=<?= urlencode($search) ?>"><?= $i ?></a>
+          <a class="page-link" href="?page=<?= $i ?>&district_id=<?= urlencode($distFilter) ?>&upazila_id=<?= urlencode($upaFilter) ?>&level_type=<?= urlencode($levelFilter) ?>&search=<?= urlencode($search) ?>"><?= $i ?></a>
         </li>
       <?php endfor; ?>
     </ul>
