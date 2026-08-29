@@ -12,12 +12,18 @@ $divFilter  = $_GET['division_id'] ?? '';
 $distFilter = $_GET['district_id'] ?? '';
 $upaFilter  = $_GET['upazila_id'] ?? '';
 $projFilter = $_GET['project_id'] ?? '';
+$typeFilter = $_GET['document_type_id'] ?? '';
 $page       = max(1, (int)($_GET['page'] ?? 1));
 $perPage    = 16;
 
 $ministries = $pdo->query("SELECT id, name FROM ministries ORDER BY name")->fetchAll();
 $divisions  = $pdo->query("SELECT id, name FROM divisions ORDER BY name")->fetchAll();
 $projects   = $pdo->query("SELECT id, name FROM projects ORDER BY name")->fetchAll();
+try {
+    $documentTypes = $pdo->query("SELECT id, name FROM document_types ORDER BY name")->fetchAll();
+} catch (PDOException $e) {
+    $documentTypes = [];
+}
 
 // Load all districts & upazilas for access label
 $allDistricts = $pdo->query("SELECT id, name FROM districts ORDER BY name")->fetchAll();
@@ -62,25 +68,29 @@ if ($projFilter !== '') {
     $sql .= " AND d.project_id = ?";
     $params[] = $projFilter;
 }
+if ($typeFilter !== '') {
+    $sql .= " AND d.document_type_id = ?";
+    $params[] = $typeFilter;
+}
 if ($search !== '') {
-    $sql .= " AND (d.document_name LIKE ? OR p.name LIKE ? OR m.name LIKE ? OR u.name LIKE ? OR dt.name LIKE ?)";
-    $params = array_merge($params, ["%$search%","%$search%","%$search%","%$search%","%$search%"]);
+    $sql .= " AND (d.document_name LIKE ? OR d.building_name LIKE ? OR p.name LIKE ? OR m.name LIKE ? OR u.name LIKE ? OR dt.name LIKE ? OR COALESCE(dtype.name, d.document_name) LIKE ?)";
+    $params = array_merge($params, ["%$search%","%$search%","%$search%","%$search%","%$search%","%$search%","%$search%"]);
 }
 
 $sql .= " ORDER BY d.created_at DESC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $allDocuments = $stmt->fetchAll();
-$allBenchmark = $stmt->fetchAll();
+$allBenchmarks = $stmt->fetchAll();
 
 $totalDocuments = count($allDocuments);
-$totalBenchmark = count($allBenchmark);
+$totalBenchmarks = count($allBenchmarks);
 $totalPages     = max(1, (int)ceil($totalDocuments / $perPage));
 $page           = min($page, $totalPages);
 $offset         = ($page - 1) * $perPage;
 $documents      = array_slice($allDocuments, $offset, $perPage);
 $docCount       = $totalDocuments;
-$bmCount       = $totalBenchmark;
+$bmCount       = $totalBenchmarks;
 
 // ========== Access Label Logic ==========
 $accessType = $cu['access_type'] ?? 'all';
@@ -187,7 +197,7 @@ $ajaxBase = base_url() . '/actions/ajax_hierarchy.php';
       <div class="stat-card stat-bm">
         <div class="stat-icon"><i class="fa-solid fa-landmark"></i></div>
         <div class="stat-value"><?= $bmCount ?></div>
-        <div class="stat-label">Available Benchmark</div>
+        <div class="stat-label">Available Benchmarks</div>
       </div>
     </div>
   </div>
@@ -230,8 +240,15 @@ $ajaxBase = base_url() . '/actions/ajax_hierarchy.php';
         <?php endforeach; ?>
       </select>
 
+      <select name="document_type_id" class="form-select form-select-sm" style="min-width:150px;max-width:170px;">
+        <option value="">All Doc Types</option>
+        <?php foreach ($documentTypes as $t): ?>
+          <option value="<?= $t['id'] ?>" <?= (string)$typeFilter===(string)$t['id']?'selected':'' ?>><?= htmlspecialchars($t['name']) ?></option>
+        <?php endforeach; ?>
+      </select>
+
       <input type="text" name="search" class="form-control form-control-sm"
-             placeholder="Search documents..." value="<?= htmlspecialchars($search) ?>"
+             placeholder="Search type, building, project..." value="<?= htmlspecialchars($search) ?>"
              style="min-width:180px;max-width:220px;flex:1 1 auto;">
 
       <button type="submit" class="btn btn-primary btn-sm rounded-pill text-nowrap px-3">
@@ -312,9 +329,10 @@ $ajaxBase = base_url() . '/actions/ajax_hierarchy.php';
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="doc-card">
           <div class="doc-icon"><img src="<?= base_url() ?>/<?= file_type_icon($d['file_path']) ?>" alt="icon" width="40"></div>
-          <div class="doc-name"><?= htmlspecialchars($d['document_name']) ?></div>
+          <div class="doc-name"><?= htmlspecialchars($d['document_type_name'] ?? $d['document_name']) ?></div>
           <div class="doc-meta small">
             <span class="doc-type-badge type-<?= type_class($d['file_type']) ?>"><?= file_type_label($d['file_path']) ?></span><br>
+            <strong>Building:</strong> <?= htmlspecialchars($d['building_name'] ?? '—') ?><br>
             <strong>Ministry:</strong> <?= htmlspecialchars($d['ministry_name']) ?><br>
             <strong>Division:</strong> <?= htmlspecialchars($d['division_name']) ?><br>
             <strong>District:</strong> <?= htmlspecialchars($d['district_name']) ?><br>
