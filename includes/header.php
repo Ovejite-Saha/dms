@@ -44,6 +44,7 @@ function isActive($file) {
             <ul class="navbar-nav me-auto">
                 <?php if ($crole === 'admin'): ?>
                 <li class="nav-item"><a class="nav-link <?= isActive('dashboard.php') ?>" href="<?= $base ?>/admin/dashboard.php"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActive('manage_admins.php') ?>" href="<?= $base ?>/admin/manage_admins.php"><i class="fa-solid fa-user-shield"></i> Admins</a></li>
                 <li class="nav-item"><a class="nav-link <?= isActive('manage_subadmins.php') ?>" href="<?= $base ?>/admin/manage_subadmins.php"><i class="fa-solid fa-user-gear"></i> Subadmins</a></li>
                 <li class="nav-item"><a class="nav-link <?= isActive('manage_users.php') ?>" href="<?= $base ?>/admin/manage_users.php"><i class="fa-solid fa-users"></i> Users</a></li>
                 <li class="nav-item"><a class="nav-link <?= isActive('manage_classes.php') ?>" href="<?= $base ?>/admin/manage_classes.php"><i class="fa-solid fa-sitemap"></i> Hierarchy</a></li>
