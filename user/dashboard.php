@@ -71,13 +71,16 @@ $sql .= " ORDER BY d.created_at DESC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $allDocuments = $stmt->fetchAll();
+$allBenchmark = $stmt->fetchAll();
 
 $totalDocuments = count($allDocuments);
+$totalBenchmark = count($allBenchmark);
 $totalPages     = max(1, (int)ceil($totalDocuments / $perPage));
 $page           = min($page, $totalPages);
 $offset         = ($page - 1) * $perPage;
 $documents      = array_slice($allDocuments, $offset, $perPage);
 $docCount       = $totalDocuments;
+$bmCount       = $totalBenchmark;
 
 // ========== Access Label Logic ==========
 $accessType = $cu['access_type'] ?? 'all';
@@ -178,6 +181,13 @@ $ajaxBase = base_url() . '/actions/ajax_hierarchy.php';
         <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
         <div class="stat-value"><?= $docCount ?></div>
         <div class="stat-label">Available Documents</div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="stat-card stat-bm">
+        <div class="stat-icon"><i class="fa-solid fa-landmark"></i></div>
+        <div class="stat-value"><?= $bmCount ?></div>
+        <div class="stat-label">Available Benchmark</div>
       </div>
     </div>
   </div>
