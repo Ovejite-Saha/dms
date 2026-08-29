@@ -117,6 +117,7 @@ body {
 .stat-green  { background: linear-gradient(135deg, #276749, #38a169); }
 .stat-orange { background: linear-gradient(135deg, #b7791f, #d69e2e); }
 .stat-red    { background: linear-gradient(135deg, #9b2c2c, #e53e3e); }
+.stat-bm    { background: linear-gradient(135deg, #654485, #ae40ee); }
 
 /* ---------- Tables ---------- */
 .table thead th {
