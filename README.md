@@ -156,6 +156,7 @@ dms2/
 │   └── dms_db.sql                    # Legacy dump (optional)
 │
 └── assets/
+    |-- bmdata                        # Stored bmdata
     ├── css/                          # Bootstrap 5 + custom style
     ├── js/                           # Bootstrap bundle + main.js
     ├── icons/                        # SVG icons (incl. gis.svg)
@@ -196,6 +197,7 @@ dms2/
 - Bootstrap 5.3 (offline)
 - Font Awesome 6.5 (CDN)
 - Vanilla JavaScript (AJAX login & cascading filters)
+- 
 
 ---
 
