@@ -156,7 +156,7 @@ dms2/
 │   └── dms_db.sql                    # Legacy dump (optional)
 │
 └── assets/
-    |-- bmdata                        # Stored bmdata
+    ├── bmdata                        # Stored bmdata
     ├── css/                          # Bootstrap 5 + custom style
     ├── js/                           # Bootstrap bundle + main.js
     ├── icons/                        # SVG icons (incl. gis.svg)
