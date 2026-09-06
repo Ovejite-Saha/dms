@@ -197,7 +197,28 @@ dms2/
 - Bootstrap 5.3 (offline)
 - Font Awesome 6.5 (CDN)
 - Vanilla JavaScript (AJAX login & cascading filters)
-- 
+
+
+## Create the folders
+- sudo mkdir -p /var/www/html/assets/uploads
+- sudo mkdir -p /var/www/html/assets/bmdata
+
+
+## Set owner to the web server user
+## On Ubuntu with Apache/PHP, that is usually www-data:
+- sudo chown -R www-data:www-data /var/www/html/assets/uploads
+- sudo chown -R www-data:www-data /var/www/html/assets/bmdata
+
+
+## Set permissions
+- sudo chmod -R 775 /var/www/html/assets/uploads
+- sudo chmod -R 775 /var/www/html/assets/bmdata
+
+
+## Optional: also let your SSH user edit files
+- sudo usermod -aG www-data YOUR_USERNAME
+
+
 
 ---
 
