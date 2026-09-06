@@ -194,14 +194,8 @@ CREATE TABLE `document_types` (
 --
 
 INSERT INTO `document_types` (`id`, `name`, `created_at`) VALUES
-(1, 'Architectural Drawing', '2026-08-29 15:46:30'),
-(2, 'Structural Drawing', '2026-08-29 15:46:30'),
-(3, 'Electrical Drawing', '2026-08-29 15:46:30'),
-(4, 'Plumbing Drawing', '2026-08-29 15:46:30'),
-(5, 'BOQ', '2026-08-29 15:46:30'),
-(6, 'Tender Document', '2026-08-29 15:46:30'),
-(7, 'Completion Certificate', '2026-08-29 15:46:30'),
-(8, 'Other', '2026-08-29 15:46:30');
+(1, 'Soile Test', '2026-08-29 15:46:30'),
+(2, 'Survey Report', '2026-08-29 15:46:30');
 
 -- --------------------------------------------------------
 
@@ -975,13 +969,13 @@ ALTER TABLE `divisions`
 -- AUTO_INCREMENT for table `documents`
 --
 ALTER TABLE `documents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `document_types`
 --
 ALTER TABLE `document_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ministries`
