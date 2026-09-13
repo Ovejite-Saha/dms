@@ -52,7 +52,8 @@ $allowed = [
     'jpg','jpeg','png','gif','txt','zip',
     'shp','shx','dbf','prj','sbn','sbx','cpg','qix',
     'geojson','json','kml','kmz','gpx','gpkg','tif','tiff','geotiff',
-    'asc','dem','tab','mif','mid','gml','dxf'
+    'asc','dem','tab','mif','mid','gml','dxf',
+    'dwg'   // ← added
 ];
 
 if (!isset($_FILES['document_file']) || $_FILES['document_file']['error'] !== UPLOAD_ERR_OK) {
