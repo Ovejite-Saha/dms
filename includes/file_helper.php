@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-// File helper - icons & labels (including GIS formats)
+// File helper - icons & labels (including GIS + DWG formats)
 // ============================================================
 
 function file_extension($filename) {
@@ -23,6 +23,8 @@ function file_type_icon($filename) {
         'gpx'=>'gis.svg','gpkg'=>'gis.svg','tab'=>'gis.svg','mif'=>'gis.svg',
         'mid'=>'gis.svg','gml'=>'gis.svg','dxf'=>'gis.svg',
         'tif'=>'gis.svg','tiff'=>'gis.svg','geotiff'=>'gis.svg','asc'=>'gis.svg','dem'=>'gis.svg',
+        // AutoCAD
+        'dwg'=>'dwg.svg',
     ];
     return 'assets/icons/' . ($iconMap[$ext] ?? 'file.svg');
 }
@@ -37,6 +39,7 @@ function file_type_label($filename) {
         'geojson'=>'GeoJSON','json'=>'JSON','kml'=>'KML','kmz'=>'KMZ','gpx'=>'GPX',
         'gpkg'=>'GeoPackage','tif'=>'GeoTIFF','tiff'=>'GeoTIFF','geotiff'=>'GeoTIFF',
         'asc'=>'ASCII Grid','dem'=>'DEM','tab'=>'MapInfo','mif'=>'MIF','gml'=>'GML','dxf'=>'DXF',
+        'dwg'=>'DWG',
     ];
     return $labelMap[$ext] ?? strtoupper($ext ?: 'FILE');
 }
@@ -51,6 +54,7 @@ function allowed_upload_extensions() {
     return [
         'pdf','doc','docx','xls','xlsx','ppt','pptx','jpg','jpeg','png','gif','txt','zip',
         'shp','shx','dbf','prj','sbn','sbx','cpg','qix','geojson','json','kml','kmz','gpx','gpkg',
-        'tif','tiff','geotiff','asc','dem','tab','mif','mid','gml','dxf'
+        'tif','tiff','geotiff','asc','dem','tab','mif','mid','gml','dxf',
+        'dwg'   // ← added
     ];
 }
